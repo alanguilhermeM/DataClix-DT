@@ -3,8 +3,8 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class WeatherService {
   private weather = {};
-  async find(lat: number, lon: number, a: string) {
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=London,uk&appid=${a}`;
+  async find(city: string, a: string) {
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${a}&lang=pt_br`;
     try {
       const res = await fetch(url);
 
