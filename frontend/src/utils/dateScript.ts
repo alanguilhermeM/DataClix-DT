@@ -8,7 +8,7 @@ const days: string[] = [
   "Saturday",
 ];
 
-const setDate = () => {
+const setDate = (): void => {
   const dayEl: Element | null = document.querySelector("#default_day");
   const dateEl = document.querySelector("#default_date");
 
@@ -28,7 +28,7 @@ const setDate = () => {
   }
 };
 
-const foreCastDay = (frContent: { dt_txt: string | number | Date; }) => {
+const foreCastDay = (frContent: { dt_txt: string | number | Date; }): string => {
   const day = new Date(frContent.dt_txt);
   const dayName = days[day.getDay()];
   const splitDay = dayName.split("", 3);
