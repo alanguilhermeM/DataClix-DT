@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Headers, UseGuards } from '@nestjs/common';
+import { Controller, Get, Headers, Query, UseGuards } from '@nestjs/common';
 import { WeatherService } from './weather.service';
 import { ApiKeyGuard } from 'src/guards/api_key.guard';
 
@@ -7,10 +7,7 @@ import { ApiKeyGuard } from 'src/guards/api_key.guard';
 export class WeatherController {
   constructor(private weatherService: WeatherService) {}
   @Get()
-  find(
-    @Body('city') city: string,
-    @Headers('api-key') apiKey: string,
-  ) {
+  find(@Query('city') city: string, @Headers('api-key') apiKey: string) {
     return this.weatherService.find(city, apiKey);
   }
 }
