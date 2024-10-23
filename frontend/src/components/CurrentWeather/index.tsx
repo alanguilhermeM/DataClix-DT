@@ -1,7 +1,7 @@
 // import Image from "next/image";
 // import { api } from "@/service/api";
-import { fetchWeatherData } from "@/service/weatherService";
-import setDate from "@/utils/dateScript";
+import { fetchForeCastData, fetchWeatherData } from "@/service/weatherService";
+import { setDate, foreCastDay } from "@/utils/dateScript";
 import { useEffect, useState } from "react";
 
 const CurrentWeather: React.FC = () => {
@@ -9,9 +9,29 @@ const CurrentWeather: React.FC = () => {
     city: "",
   });
   const [weatherData, setWeatherData] = useState(null);
+  const [notFound, setNotFound] = useState(false);
+  const [foreCast, setForeCast] = useState([]);
+  const [days, setDays] = useState([]);
 
   useEffect(() => {
     setDate();
+
+    const loadWeatherAndForeData = async () => {
+      const data = await fetchWeatherData("São João Del Rei");
+      setWeatherData(data);
+      if (data?.coord) {
+        const foreData = await fetchForeCastData(
+          data.coord.lat,
+          data.coord.lon
+        );
+        setForeCast(foreData);
+        
+        const daysArray = foreData.map((fore: { dt_txt: string | number | Date; }) => foreCastDay(fore));
+        setDays(daysArray);
+      }
+    };
+    console.log(weatherData)
+    loadWeatherAndForeData();
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,7 +43,18 @@ const CurrentWeather: React.FC = () => {
     e.preventDefault();
 
     const data = await fetchWeatherData(formData.city);
-    setWeatherData(data)
+
+    if (!data) {
+      setNotFound(true);
+      console.log("erro");
+    } else {
+      setNotFound(false);
+      setWeatherData(data);
+      const foreData = await fetchForeCastData(data.coord.lat, data.coord.lon);
+      setForeCast(foreData);
+    }
+    
+    setFormData({ city: "" });
   };
 
   return (
@@ -33,13 +64,26 @@ const CurrentWeather: React.FC = () => {
           <h2 className="text-[3rem] font-bold" id="default_day" />
           <span id="default_date" />
           <div className="">
-            <img
-              src="https://openweathermap.org/img/wn/10d@4x.png"
-              alt="a"
-              className="w-[80%] object-cover mx-auto"
-            />
-            <h2 className="text-[4rem] font-[800] ">22°C</h2>
-            <h3 className="text-[1.3rem] capitalize">Overwelming Clounds</h3>
+            {notFound ? (
+              <div>
+                <h1>404 Not Found</h1>
+                <span>City or Country not found</span>
+              </div>
+            ) : (
+              <div>
+                <img
+                  src={`https://openweathermap.org/img/wn/${weatherData?.weather[0].icon}@4x.png`}
+                  alt="a"
+                  className="w-[80%] object-cover mx-auto"
+                />
+                <h2 className="text-[4rem] font-[800] ">
+                  {weatherData?.main.temp}°C
+                </h2>
+                <h3 className="text-[1.3rem] capitalize">
+                  {weatherData?.weather[0].description}
+                </h3>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -64,61 +108,43 @@ const CurrentWeather: React.FC = () => {
         <div className="  ">
           <div className="flex justify-between p-[0.4rem_0]">
             <p className="font-semibold">NAME</p>
-            <span>UNITED STATES</span>
+            <span>
+              {weatherData?.name} - {weatherData?.sys.country}
+            </span>
           </div>
           <div className="flex justify-between p-[0.4rem_0]">
             <p className="font-semibold">TEMP</p>
-            <span>23°C</span>
+            <span>{weatherData?.main.temp}°C</span>
           </div>
           <div className="flex justify-between p-[0.4rem_0]">
             <p className="font-semibold">HUMIDITY</p>
-            <span>2%</span>
+            <span>{weatherData?.main.humidity}%</span>
           </div>
           <div className="flex justify-between p-[0.4rem_0]">
             <p className="font-semibold">WIND SPEED</p>
-            <span>2.9 Km/h</span>
+            <span>{weatherData?.wind.speed} Km/h</span>
           </div>
         </div>
 
         <div>
-          <ul className="flex justify-between items-center list-none m-[3rem_0rem] shadow-[0_5px_15px_rgba(0,0,0,0.35)]">
-            <li className="flex flex-col items-center rounded-2xl p-[0.5rem] transition-all duration-300 ease-in hover:scale-[1.1] hover:bg-[#fff] hover:text-[#232931] hover:shadow-[0_5px_15px_rgba(0,0,0,0.35)] cursor-pointer">
-              <img
-                src="https://openweathermap.org/img/wn/10d@2x.png"
-                alt=""
-                className="w-1/2 object-cover"
-              />
-              <span>Seg</span>
-              <span>23°C</span>
-            </li>
-            <li className="flex flex-col items-center rounded-2xl p-[0.5rem] transition-all duration-300 ease-in hover:scale-[1.1] hover:bg-[#fff] hover:text-[#232931] hover:shadow-[0_5px_15px_rgba(0,0,0,0.35)] cursor-pointer">
-              <img
-                src="https://openweathermap.org/img/wn/10d@2x.png"
-                alt=""
-                className="w-1/2 object-cover"
-              />
-              <span>Ter</span>
-              <span>23°C</span>
-            </li>
-            <li className="flex flex-col items-center rounded-2xl p-[0.5rem] transition-all duration-300 ease-in hover:scale-[1.1] hover:bg-[#fff] hover:text-[#232931] hover:shadow-[0_5px_15px_rgba(0,0,0,0.35)] cursor-pointer">
-              <img
-                src="https://openweathermap.org/img/wn/10d@2x.png"
-                alt=""
-                className="w-1/2 object-cover"
-              />
-              <span>Qua</span>
-              <span>23°C</span>
-            </li>
-            <li className="flex flex-col items-center rounded-2xl p-[0.5rem] transition-all duration-300 ease-in hover:scale-[1.1] hover:bg-[#fff] hover:text-[#232931] hover:shadow-[0_5px_15px_rgba(0,0,0,0.35)] cursor-pointer">
-              <img
-                src="https://openweathermap.org/img/wn/10d@2x.png"
-                alt=""
-                className="w-1/2 object-cover"
-              />
-              <span>Qui</span>
-              <span>23°C</span>
-            </li>
-          </ul>
+          {foreCast && foreCast.length > 0 && (
+            <ul className="flex justify-between items-center list-none m-[3rem_0rem] shadow-[0_5px_15px_rgba(0,0,0,0.35)]">
+              {foreCast.slice(0, 4).map((forecast, index) => (
+                <li
+                  key={index}
+                  className="flex flex-col items-center rounded-2xl p-[0.5rem] transition-all duration-300 ease-in hover:scale-[1.1] hover:bg-[#fff] hover:text-[#232931] hover:shadow-[0_5px_15px_rgba(0,0,0,0.35)] cursor-pointer"
+                >
+                  <img
+                    src={`https://openweathermap.org/img/wn/${forecast.weather[0].icon}@4x.png`}
+                    alt={`Weather icon for ${forecast.weather[0].description}`}
+                    className="w-1/2 object-cover"
+                  />
+                  <span>{days[index]}</span>
+                  <span>{Math.round(forecast.main.temp - 273.15)}°C</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     </div>
