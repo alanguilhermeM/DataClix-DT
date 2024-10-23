@@ -1,12 +1,30 @@
 // import Image from "next/image";
+// import { api } from "@/service/api";
+import { fetchWeatherData } from "@/service/weatherService";
 import setDate from "@/utils/dateScript";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const CurrentWeather: React.FC = () => {
+  const [formData, setFormData] = useState({
+    city: "",
+  });
+  const [weatherData, setWeatherData] = useState(null);
 
   useEffect(() => {
-    setDate()
-  });
+    setDate();
+  }, []);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setFormData({ city: value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const data = await fetchWeatherData(formData.city);
+    setWeatherData(data)
+  };
 
   return (
     <div className="grid grid-cols-[3fr_4fr] gap-4">
@@ -26,15 +44,16 @@ const CurrentWeather: React.FC = () => {
         </div>
       </div>
       <div className="p-[1.5rem]">
-        <form className="m-[1.5rem_0] relative">
+        <form className="m-[1.5rem_0] relative" onSubmit={handleSubmit}>
           <input
-            id="input_field"
             type="text"
             placeholder="Search a location"
             className="w-[84%] outline-none bg-transparent border-solid border border-[#37474f] rounded-[5px] p-[0.95rem_0.7rem] text-[#fff] text-[1rem]"
+            value={formData.city}
+            onChange={handleInputChange}
+            required
           />
           <button
-            id="btn_search"
             type="submit"
             className="absolute top-0 right-0 rounded-tr-[5px] rounded-br-[5px] p-[1rem_0.7rem] outline-none border-none bg-[#5c6bc0] text-[#fff] cursor-pointer"
           >

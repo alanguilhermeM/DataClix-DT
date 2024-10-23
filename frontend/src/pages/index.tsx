@@ -1,6 +1,6 @@
 import CurrentWeather from '@/components/CurrentWeather';
 import React from 'react'
-import '@/styles/globals.css';
+// import '@/styles/globals.css';
 
 const Home: React.FC = () => {
   return (
