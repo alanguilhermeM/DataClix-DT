@@ -1,11 +1,10 @@
 import { useWeatherContext } from "@/context/myWeatherContext";
 import Image from "next/image";
-// import { useContext } from "react";
 
 const WeatherDisplay = () => {
-  const {weatherData, notFound} = useWeatherContext()!;
+  const { weatherData, notFound } = useWeatherContext()!;
   return (
-    <div>
+    <div className="p-4 text-[#f0eff4] rounded-lg">
       {notFound ? (
         <div>
           <h1>404 Not Found</h1>

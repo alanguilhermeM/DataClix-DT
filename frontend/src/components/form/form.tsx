@@ -36,7 +36,7 @@ const Form: React.FC = () => {
       <input
         type="text"
         placeholder="Search a location"
-        className="w-[84%] outline-none bg-transparent border-solid border border-[#37474f] rounded-[5px] p-[0.95rem_0.7rem] text-[#fff] text-[1rem]"
+        className="w-[84%] outline-none bg-gray-900 border-solid border border-[#37474f] rounded-[5px] p-[0.95rem_0.7rem] text-[#fff] text-[1rem] dark:bg-white dark:border-gray-600 dark:text-black"
         value={formData.city}
         onChange={handleInputChange}
         required

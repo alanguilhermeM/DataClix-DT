@@ -8,7 +8,7 @@ import WeatherDisplay from "@/components/weatherDisplay/weatherDisplay";
 import Form from "@/components/form/form";
 import MeteorologicalData from "@/components/meteorologicalData/meteorologicalData";
 import Forecast from "@/components/forecast/forecast";
-
+import ThemeSwitcher from "@/components/theme-switcher";
 
 const Home: React.FC = () => {
   const { handleWeather } = useWeatherContext()!;
@@ -39,7 +39,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="max-w-[800px] min-w-[800px] w-full bg-[#232931] text-[#fff] rounded-[25px] shadow-[0_5px_15px_rgba(0,0,0,0.35)]">
-      <div className="grid grid-cols-[3fr_4fr] gap-4">
+      <div className="grid grid-cols-[3fr_4fr] gap-0">
         <div className="rounded-tl-[25px] rounded-bl-[25px] bg-img bg-center bg-no-repeat bg-cover relative transform-[scale(1.03)_perspective(200px)] before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[linear-gradient(135deg,#0d47a1_10%,#0d47a1_100%)] before:opacity-50 before:z-[-1] before:rounded-[25px]">
           <div className="p-[1.5rem] text-center">
             <h2 className="text-[3rem] font-bold" id="default_day" />
@@ -49,10 +49,11 @@ const Home: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="p-[1.5rem]">
+        <div className="p-[1.5rem] bg-[#f0eff4] rounded-r-[25px] dark:bg-[#232931]">
           <Form />
           <MeteorologicalData />
           <Forecast />
+          <ThemeSwitcher />
         </div>
       </div>
     </div>
