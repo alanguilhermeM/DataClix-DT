@@ -68,6 +68,11 @@ Este é um app full stack que fornece informações sobre o clima atual e a prev
 # Rodando o Frontend
 <ol>
   <li>
+     Entre na pasta frontend e builde a aplicação:
+
+      npm run build
+  </li>
+  <li>
      Entre na pasta frontend e inicie a aplicação:
 
       npm run dev
