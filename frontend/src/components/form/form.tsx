@@ -20,7 +20,6 @@ const Form: React.FC = () => {
 
     if (!data) {
       handleNotFound(true);
-      console.log("erro");
     } else {
       handleNotFound(false);
       handleWeather(data);

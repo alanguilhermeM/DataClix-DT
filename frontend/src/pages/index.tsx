@@ -38,20 +38,22 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <main className="max-w-[800px] min-w-[800px] w-full bg-[#232931] text-[#fff] rounded-[25px] shadow-[0_5px_15px_rgba(0,0,0,0.35)]">
-      <header className="grid grid-cols-[3fr_4fr] gap-0">
-        <section className="rounded-tl-[25px] rounded-bl-[25px] bg-img bg-center bg-no-repeat bg-cover relative transform-[scale(1.03)_perspective(200px)] before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[linear-gradient(135deg,#0d47a1_10%,#0d47a1_100%)] before:opacity-50 before:z-[-1] before:rounded-[25px]">
+    <main className="lg:max-w-[800px] lg:min-w-[800px] w-full max-md:h-[600px] bg-[#232931] text-[#fff] rounded-[25px] shadow-[0_5px_15px_rgba(0,0,0,0.35)]">
+      <header className="md:grid md:grid-cols-[3fr_4fr] md:gap-0">
+        <section className="rounded-tl-[25px] max-md:rounded-t-[25px] md:rounded-bl-[25px] bg-img bg-center bg-no-repeat bg-cover relative transform-[scale(1.03)_perspective(200px)] before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[linear-gradient(135deg,#0d47a1_10%,#0d47a1_100%)] before:opacity-50 before:z-[-1] before:rounded-[25px]">
           <div className="p-[1.5rem] text-center">
             <h2 className="text-[3rem] font-bold" id="default_day" />
             <time id="default_date" aria-live="polite" />
             <WeatherDisplay />
           </div>
         </section>
-        <section className="p-[1.5rem] bg-[#f0eff4] rounded-r-[25px] dark:bg-[#232931]">
+        <section className="p-[1.5rem] bg-[#f0eff4] md:rounded-r-[25px] dark:bg-[#232931]">
           <Form />
           <MeteorologicalData />
           <Forecast />
-          <ThemeSwitcher />
+          <div className="max-md:flex max-md:justify-center">
+            <ThemeSwitcher />
+          </div>
         </section>
       </header>
     </main>
