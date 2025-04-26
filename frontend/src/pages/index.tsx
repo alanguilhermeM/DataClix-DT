@@ -9,33 +9,34 @@ import Form from "@/components/form/form";
 import MeteorologicalData from "@/components/meteorologicalData/meteorologicalData";
 import Forecast from "@/components/forecast/forecast";
 import ThemeSwitcher from "@/components/theme-switcher";
+import { GetServerSideProps } from "next";
+import { ForeCastData, WeatherData } from "@/interfaces/weatherTypes";
 
-const Home: React.FC = () => {
+interface HomeProps {
+  weatherData: WeatherData;
+  forecastData: ForeCastData[];
+}
+
+const Home: React.FC<HomeProps> = ({ weatherData, forecastData }) => {
   const { handleWeather } = useWeatherContext()!;
   const { handleForecast, handleDays } = useForecastContext()!;
 
   useEffect(() => {
     setDate();
+    
+    if (weatherData) {
+      handleWeather(weatherData);
+    }
+    if (forecastData) {
+      handleForecast(forecastData);
 
-    const loadWeatherAndForeData = async () => {
-      const data = await fetchWeatherData("São João Del Rei");
-      handleWeather(data);
-      if (data?.coord) {
-        const foreData = await fetchForeCastData(
-          data.coord.lat,
-          data.coord.lon
-        );
-        handleForecast(foreData);
+      const daysArray = forecastData.map(
+        (fore: { dt_txt: string | number | Date }) => foreCastDay(fore)
+      );
+      handleDays(daysArray);
+    }
+  }, [weatherData, forecastData]);
 
-        const daysArray = foreData.map(
-          (fore: { dt_txt: string | number | Date }) => foreCastDay(fore)
-        );
-        handleDays(daysArray);
-      }
-    };
-
-    loadWeatherAndForeData();
-  }, []);
 
   return (
     <main className="lg:max-w-[800px] lg:min-w-[800px] w-full max-md:h-[600px] bg-[#232931] text-[#fff] rounded-[25px] shadow-[0_5px_15px_rgba(0,0,0,0.35)]">
@@ -58,6 +59,26 @@ const Home: React.FC = () => {
       </header>
     </main>
   );
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const getServerSideProps: GetServerSideProps = async (_context) => {
+  const weatherData = await fetchWeatherData("São João Del Rei");
+
+  let forecastData = null;
+  if (weatherData?.coord) {
+    forecastData = await fetchForeCastData(
+      weatherData.coord.lat,
+      weatherData.coord.lon
+    );
+  }
+
+  return {
+    props: {
+      weatherData,
+      forecastData,
+    },
+  };
 };
 
 export default Home;
